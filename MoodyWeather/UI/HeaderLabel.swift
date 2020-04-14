@@ -12,7 +12,7 @@ class HeaderLabel: UILabel {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        isAccessibilityElement = true
+        
     }
     
     required init?(coder: NSCoder) {

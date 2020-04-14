@@ -25,6 +25,7 @@
 		83A355312429405000E197EA /* OpenWeatherMapApiConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A355302429405000E197EA /* OpenWeatherMapApiConnector.swift */; };
 		83A355332429534C00E197EA /* ExplanationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A355322429534C00E197EA /* ExplanationViewController.swift */; };
 		83D4E78C242D6A0E00F4CEB0 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D4E78B242D6A0E00F4CEB0 /* LocationManager.swift */; };
+		83EC2EB1244639B8004A7B55 /* WeatherLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83EC2EB0244639B8004A7B55 /* WeatherLabel.swift */; };
 		83FEB8732444E28E0062D10E /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FEB8712444E28E0062D10E /* SearchTableViewCell.swift */; };
 		83FEB8742444E28E0062D10E /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FEB8722444E28E0062D10E /* SearchViewController.swift */; };
 		83FEB87F2444E5190062D10E /* DefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FEB87E2444E5190062D10E /* DefaultsManager.swift */; };
@@ -75,6 +76,7 @@
 		83A355322429534C00E197EA /* ExplanationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExplanationViewController.swift; path = MoodyWeather/ExplanationView/ExplanationViewController.swift; sourceTree = SOURCE_ROOT; };
 		83B668F32433F881001CED59 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = "../../../Downloads/mapbox-ios-sdk-5/dynamic/Mapbox.framework"; sourceTree = "<group>"; };
 		83D4E78B242D6A0E00F4CEB0 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		83EC2EB0244639B8004A7B55 /* WeatherLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WeatherLabel.swift; path = MoodyWeather/Main/WeatherLabel.swift; sourceTree = SOURCE_ROOT; };
 		83FEB8712444E28E0062D10E /* SearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		83FEB8722444E28E0062D10E /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		83FEB87E2444E5190062D10E /* DefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsManager.swift; sourceTree = "<group>"; };
@@ -230,6 +232,7 @@
 		83FEB87A2444E3640062D10E /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				83EC2EB0244639B8004A7B55 /* WeatherLabel.swift */,
 				83FEB8822444E5C70062D10E /* HeaderLabel.swift */,
 				83A3550924293BD200E197EA /* Assets.xcassets */,
 				8317DE29242D2423008B5F93 /* LoadingViewController.swift */,
@@ -403,6 +406,7 @@
 				8317DE28242BE91E008B5F93 /* MoodyWeatherCreator.swift in Sources */,
 				83FEB8832444E5C70062D10E /* HeaderLabel.swift in Sources */,
 				83FEB87F2444E5190062D10E /* DefaultsManager.swift in Sources */,
+				83EC2EB1244639B8004A7B55 /* WeatherLabel.swift in Sources */,
 				83A3550124293BD000E197EA /* AppDelegate.swift in Sources */,
 				83A3550324293BD000E197EA /* SceneDelegate.swift in Sources */,
 				8317DE2A242D2423008B5F93 /* LoadingViewController.swift in Sources */,
@@ -585,7 +589,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = C67UGMY2HN;
 				HEADER_SEARCH_PATHS = "$(SCROOT)/Pods/**";
 				INFOPLIST_FILE = MoodyWeather/Info.plist;
@@ -593,6 +597,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nickreeder.MoodyWeather;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -605,7 +610,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = C67UGMY2HN;
 				HEADER_SEARCH_PATHS = "$(SCROOT)/Pods/**";
 				INFOPLIST_FILE = MoodyWeather/Info.plist;
@@ -613,6 +618,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nickreeder.MoodyWeather;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
