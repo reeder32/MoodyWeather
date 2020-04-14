@@ -22,12 +22,24 @@ class HomeViewController: UIViewController {
     
     lazy var nameLabel: UILabel = {
         let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
         l.font = FontBuilder().setBoldFont(size: 40)
         l.textAlignment = .left
         l.minimumScaleFactor = 0.5
         l.textColor = .white
         l.alpha = 0
         l.adjustsFontSizeToFitWidth = true
+        return l
+    }()
+    lazy var tempLabel: UILabel = {
+        let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.font = FontBuilder().setBoldFont(size: 20)
+        l.textAlignment = .left
+        l.minimumScaleFactor = 0.5
+        l.adjustsFontSizeToFitWidth = true
+        l.textColor = .white
+        l.alpha = 0
         return l
     }()
     
@@ -70,108 +82,43 @@ class HomeViewController: UIViewController {
         return l
     }()
     
-    lazy var moonLabel: UILabel = {
-        let l = UILabel()
-        l.font = FontBuilder().setDefaultFont(size: 15)
-        l.numberOfLines = 0
+    lazy var moonLabel: WeatherLabel = {
+        let l = WeatherLabel()
         l.text = "Loading..."
-        l.textAlignment = .left
-        l.minimumScaleFactor = 0.5
-        //l.adjustsFontSizeToFitWidth = true
-        l.textColor = .white
-        l.alpha = 0
         return l
     }()
     
-    lazy var tempLabel: UILabel = {
-        let l = UILabel()
-        l.font = FontBuilder().setBoldFont(size: 20)
-        l.textAlignment = .left
-        l.minimumScaleFactor = 0.5
-        l.adjustsFontSizeToFitWidth = true
-        l.textColor = .white
-        l.alpha = 0
+    lazy var descriptionLabel: WeatherLabel = {
+        let l = WeatherLabel()
+        return l
+    }()
+    lazy var tempMaxMinLabel: WeatherLabel = {
+        let l = WeatherLabel()
         return l
     }()
     
-    lazy var descriptionLabel: UILabel = {
-        let l = UILabel()
-        l.font = FontBuilder().setDefaultFont(size: 15)
-        l.textAlignment = .left
-        l.minimumScaleFactor = 0.5
-        l.adjustsFontSizeToFitWidth = true
-        l.textColor = .white
-        l.alpha = 0
-        return l
-    }()
-    lazy var tempMaxMinLabel: UILabel = {
-        let l = UILabel()
-        l.font = FontBuilder().setDefaultFont(size: 15)
-        l.textAlignment = .left
-        l.minimumScaleFactor = 0.5
-        l.numberOfLines = 0
-        l.textColor = .white
-        l.alpha = 0
+    lazy var cloudLabel: WeatherLabel = {
+        let l = WeatherLabel()
         return l
     }()
     
-    
-    lazy var cloudLabel: UILabel = {
-        let l = UILabel()
-        l.font = FontBuilder().setDefaultFont(size: 15)
-        l.textAlignment = .left
-        l.minimumScaleFactor = 0.5
-        l.adjustsFontSizeToFitWidth = true
-        l.textColor = .white
-        l.alpha = 0
+    lazy var windLabel: WeatherLabel = {
+        let l = WeatherLabel()
         return l
     }()
     
-    lazy var windLabel: UILabel = {
-        let l = UILabel()
-        l.font = FontBuilder().setDefaultFont(size: 15)
-        l.textAlignment = .left
-        l.minimumScaleFactor = 0.5
-        l.adjustsFontSizeToFitWidth = true
-        l.textColor = .white
-        l.alpha = 0
-        l.numberOfLines = 0
+    lazy var humidityLabel: WeatherLabel = {
+        let l = WeatherLabel()
         return l
     }()
     
-    lazy var humidityLabel: UILabel = {
-        let l = UILabel()
-        l.font = FontBuilder().setDefaultFont(size: 15)
-        l.textAlignment = .left
-        l.minimumScaleFactor = 0.5
-        l.adjustsFontSizeToFitWidth = true
-        l.textColor = .white
-        l.alpha = 0
+    lazy var sunriseSunsetLabel: WeatherLabel = {
+        let l = WeatherLabel()
         return l
     }()
     
-    lazy var sunriseSunsetLabel: UILabel = {
-        let l = UILabel()
-        l.font = FontBuilder().setDefaultFont(size: 15)
-        l.textAlignment = .left
-        l.minimumScaleFactor = 0.5
-        l.numberOfLines = 0
-        l.textColor = .white
-        l.alpha = 0
-        l.adjustsFontSizeToFitWidth = true
-        return l
-    }()
-    
-    lazy var moodLabel: UILabel = {
-        let l = UILabel()
-        l.font = FontBuilder().setBoldFont(size: 18)
-        l.translatesAutoresizingMaskIntoConstraints = false
-        l.textAlignment = .left
-        l.minimumScaleFactor = 0.5
-        l.numberOfLines = 0
-        l.textColor = .white
-        l.alpha = 0
-        //l.adjustsFontSizeToFitWidth = true
+    lazy var moodLabel: WeatherLabel = {
+        let l = WeatherLabel()
         return l
     }()
     
@@ -188,13 +135,8 @@ class HomeViewController: UIViewController {
     }
     
     var colorCreator: ColorCreator?
-    var moodyWeatherCreator: MoodyWeatherCreator?
     var margins = UILayoutGuide()
-    var location: [String: Double]?
     let connector = OpenWeatherMapApiConnector()
-    var nameLabelLeadingConstraint = NSLayoutConstraint()
-    var TemperatureHeaderTopConstraint = NSLayoutConstraint()
-    var humidityLabelBottomConstraint = NSLayoutConstraint()
     var defaults = UserDefaults.standard
     
     init(weather: Weather?, moon: Moon?) {
@@ -212,16 +154,11 @@ class HomeViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
         
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         NotificationCenter.default.addObserver(self, selector: #selector(changeLabelsBasedOnPrefs), name: NSNotification.Name("updatePrefs"), object: nil)
-        
         view.backgroundColor = .relaxedColor
         setupViews()
         addConstraints()
@@ -255,26 +192,10 @@ class HomeViewController: UIViewController {
         self.scrollView.addSubview(moodLabel)
         self.scrollView.addSubview(moonHeader)
         self.scrollView.addSubview(moonLabel)
-        
-        
     }
-    
-    //    nameLabelLeadingConstraint = NSLayoutConstraint(item: nameLabel, attribute: .leading, relatedBy: .equal, toItem: scrollView, attribute: .leading, multiplier: 1, constant: 10)
-    //    TemperatureHeaderTopConstraint = NSLayoutConstraint(item: temperatureHeader, attribute: .top, relatedBy: .equal, toItem: tempLabel, attribute: .bottom, multiplier: 1, constant: 20)
-    //    humidityLabelBottomConstraint = NSLayoutConstraint(item: humidityLabel, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottomMargin, multiplier: 1, constant: 8)
     
     @objc func addConstraints() {
         margins = view.layoutMarginsGuide
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        tempLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        sunriseSunsetLabel.translatesAutoresizingMaskIntoConstraints = false
-        cloudLabel.translatesAutoresizingMaskIntoConstraints = false
-        windLabel.translatesAutoresizingMaskIntoConstraints = false
-        humidityLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        tempMaxMinLabel.translatesAutoresizingMaskIntoConstraints = false
-        moonLabel.translatesAutoresizingMaskIntoConstraints = false
         
         scrollView.topAnchor.constraint(equalTo: margins.topAnchor, constant: 0).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -46).isActive = true
@@ -285,10 +206,8 @@ class HomeViewController: UIViewController {
         nameLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 10).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10).isActive = true
         
-        //tempLabel.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor, constant: 0).isActive = true
         tempLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8).isActive = true
         tempLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor, constant: 0).isActive = true
-        //tempLabel.widthAnchor.constraint(equalTo: margins.widthAnchor, multiplier: 0.45).isActive = true
         
         moodHeader.topAnchor.constraint(equalTo: tempLabel.bottomAnchor, constant: 12).isActive = true
         moodHeader.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 15).isActive = true
@@ -303,8 +222,6 @@ class HomeViewController: UIViewController {
         tempMaxMinLabel.leadingAnchor.constraint(equalTo: temperatureHeader.leadingAnchor, constant: 0).isActive = true
         tempMaxMinLabel.topAnchor.constraint(equalTo: temperatureHeader.bottomAnchor, constant: 8).isActive = true
         
-        //tempMinLabel.trailingAnchor.constraint(greaterThanOrEqualTo: margins.trailingAnchor, constant: 8).isActive = true
-        
         cloudsHeader.topAnchor.constraint(equalTo: tempMaxMinLabel.bottomAnchor, constant: 12).isActive = true
         cloudsHeader.leadingAnchor.constraint(equalTo: tempMaxMinLabel.leadingAnchor, constant: 0).isActive = true
         
@@ -318,7 +235,6 @@ class HomeViewController: UIViewController {
         sunHeader.leadingAnchor.constraint(equalTo: descriptionLabel.leadingAnchor, constant: 0).isActive = true
         
         sunriseSunsetLabel.topAnchor.constraint(equalTo: sunHeader.bottomAnchor, constant: 8).isActive = true
-        //sunriseSunsetLabel.widthAnchor.constraint(equalTo: margins.widthAnchor, multiplier: 0.80).isActive = true
         sunriseSunsetLabel.leadingAnchor.constraint(equalTo: descriptionLabel.leadingAnchor, constant: 0).isActive = true
         
         windHeader.topAnchor.constraint(equalTo: sunriseSunsetLabel.bottomAnchor, constant: 12).isActive = true
@@ -340,7 +256,6 @@ class HomeViewController: UIViewController {
         moonLabel.leadingAnchor.constraint(equalTo: moonHeader.leadingAnchor, constant: 0).isActive = true
         moonLabel.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0).isActive = true
         
-        //toolBar.topAnchor.constraint(greaterThanOrEqualTo: humidityLabel.bottomAnchor, constant: 10).isActive = true
         self.scrollView.setWidthConstraint(scrollView.widthAnchor, factor: 0.85)
         
     }
@@ -360,7 +275,7 @@ class HomeViewController: UIViewController {
     func showMoon() {
         if let moon = moon {
             DispatchQueue.main.async {
-                self.moonLabel.text = "Moon Phase: \(moon.Phase)\nMoon type: \(moon.Moon.first ?? "")"
+                self.moonLabel.text = "Moon Phase: \(moon.Phase)\nMoon Type: \(moon.Moon.first ?? "")"
             }
         }
     }

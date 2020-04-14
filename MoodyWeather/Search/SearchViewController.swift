@@ -245,8 +245,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             DispatchQueue.main.async {
                 self.didSelect?(weather, nil)
                 self.dismiss(animated: true) {
-                    
-                    //self.onDismiss?(true)
+                    self.onDismiss?(true)
                 }
             }
             
