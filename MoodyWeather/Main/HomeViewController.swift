@@ -369,12 +369,14 @@ class HomeViewController: UIViewController {
         if let weather = weather {
             //print(self.weather as Any)
             DispatchQueue.main.async {
+                
                 self.colorCreator?.createMoodColor(weather: weather)
                 self.nameLabel.text = weather.name
                 self.changeLabelsBasedOnPrefs()
                 self.cloudLabel.text = "Cloud cover: \(weather.clouds.all)%"
                 self.descriptionLabel.text = weather.weather.first?.description.localizedCapitalized
-                self.sunriseSunsetLabel.text = "Sunrise: \(self.convertTimestamp(weather.sys.sunrise))\nSunset: \(self.convertTimestamp(weather.sys.sunset))"
+               
+                self.sunriseSunsetLabel.text = "Sunrise: \(self.convertTimestamp(weather.sys.sunrise, weather.sys.timezone))\nSunset: \(self.convertTimestamp(weather.sys.sunset, weather.sys.timezone))"
                 self.windLabel.text = "Wind is blowing \(weather.wind.speed) m/s \(self.windDirection(weather.wind.deg ?? 0) ?? "")"
                 self.humidityLabel.text = "Humidity: \(weather.main.humidity)%"
                 if let tempColor = self.colorCreator?.moodyWeatherCreator?.tempColor, let cloudColor = self.colorCreator?.moodyWeatherCreator?.cloudColor {

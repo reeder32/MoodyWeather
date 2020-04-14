@@ -67,6 +67,7 @@ struct System: Codable {
     var sunrise: TimeInterval
     var sunset: TimeInterval
     var type: Int?
+    var timezone: Int?
 }
 struct Main: Codable {
     var feels_like: Double
@@ -119,6 +120,9 @@ struct OpenWeatherMapApiConnector {
             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
                 
                 if let data = data, error == nil {
+//                    let jsonData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+//                    print(jsonData)
+                    
                     let weatherList = try? self.decoder.decode(WeatherList.self, from: data)
                     completion(weatherList, nil)
                 } else {
@@ -138,7 +142,8 @@ struct OpenWeatherMapApiConnector {
             let request = URLRequest(url: url)
             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
                 if let data = data, error == nil {
-                    
+//                    let jsonData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String: Any]
+//                                       print(jsonData)
                     let weather = try? self.decoder.decode(Weather.self, from: data)
                     if let encoded = try? self.encoder.encode(weather) {
                         self.defaults.set(encoded, forKey: UserDefaultsKeys.RecentWeather.rawValue)

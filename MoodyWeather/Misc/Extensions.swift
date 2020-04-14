@@ -12,12 +12,12 @@ import UIKit
 extension Array where Element: Hashable {
     func removingDuplicates() -> [Element] {
         var addedDict = [Element: Bool]()
-
+        
         return filter {
             addedDict.updateValue(true, forKey: $0) == nil
         }
     }
-
+    
     mutating func removeDuplicates() {
         self = self.removingDuplicates()
     }
@@ -115,7 +115,7 @@ extension UIView {
 }
 
 extension UIViewController {
-
+    
     func openSettings() {
         if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(settingsUrl)
@@ -143,18 +143,28 @@ extension UIViewController {
         }
     }
     
-    func convertTimestamp(_ timestamp: TimeInterval) -> String {
+    func convertTimestamp(_ timestamp: TimeInterval, _ timestampDiff: Int?) -> String {
+        
         let df: DateFormatter = {
             let dateForm = DateFormatter()
-            dateForm.locale = .autoupdatingCurrent
-            dateForm.dateFormat = "hh:mma"
+            // This is the fucking key. Needed this to be added in order to account for daylight savings
+            dateForm.timeZone = TimeZone(abbreviation: "GMT")
+            dateForm.setLocalizedDateFormatFromTemplate("hh:mma")
             dateForm.amSymbol = "AM"
             dateForm.pmSymbol = "PM"
+            if let diff = timestampDiff {
+                dateForm.timeZone = TimeZone(secondsFromGMT: diff)
+            }
             return dateForm
         }()
+        
+        
+        
         let date = Date(timeIntervalSince1970: timestamp)
         return df.string(from: date)
     }
+    
+    
     
     func windDirection(_ wind: Int) -> String? {
         switch wind {

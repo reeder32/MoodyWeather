@@ -7,7 +7,7 @@
 //
 
 class ExampleWeather {
-    var example = Weather(weather: [WeatherArray.init(description: "", icon: "", id: 0, main: "")], wind: Wind(gust: 0, deg: 270, speed: 6), clouds: Clouds(all: 90), main: Main(feels_like: 0, humidity: 0, pressure: 0, temp: 297.039, temp_max: 273, temp_min: 310), id: 0, name: "Example", sys: System(country: "", id: 0, sunrise: 100023, sunset: 100343, type: 0), coord: Coord(lat: 120, lon: 120), dt: 19398397486346, visibility: 2000)
+    var example = Weather(weather: [WeatherArray.init(description: "", icon: "", id: 0, main: "")], wind: Wind(gust: 0, deg: 270, speed: 6), clouds: Clouds(all: 90), main: Main(feels_like: 0, humidity: 0, pressure: 0, temp: 297.039, temp_max: 273, temp_min: 310), id: 0, name: "Example", sys: System(country: "", id: 0, sunrise: 100023, sunset: 100343, type: 0, timezone: -2000), coord: Coord(lat: 120, lon: 120), dt: 19398397486346, visibility: 2000)
 }
 
 import UIKit
