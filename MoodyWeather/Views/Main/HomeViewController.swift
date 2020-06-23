@@ -123,7 +123,7 @@ class HomeViewController: UIViewController {
         return l
     }()
     
-    var moon: Moon? {
+    var moons: [Moon]? {
         didSet {
             showMoon()
         }
@@ -139,8 +139,8 @@ class HomeViewController: UIViewController {
    
     var defaults = UserDefaults.standard
     
-    init(weather: Weather?, moon: Moon?) {
-        self.moon = moon
+    init(weather: Weather?, moons: [Moon]?) {
+        self.moons = moons
         self.weather = weather
         super.init(nibName: nil, bundle: nil)
         self.colorCreator = ColorCreator(with: self.view)
@@ -198,31 +198,31 @@ class HomeViewController: UIViewController {
         let margins = getMargins()
         
         scrollView.topAnchor.constraint(equalTo: margins.topAnchor, constant: 0).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -46).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -48).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: 0).isActive = true
         
         
-        nameLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 10).isActive = true
-        nameLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10).isActive = true
+        nameLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8).isActive = true
+        nameLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8).isActive = true
         
         tempLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8).isActive = true
         tempLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor, constant: 0).isActive = true
         
-        moodHeader.topAnchor.constraint(equalTo: tempLabel.bottomAnchor, constant: 12).isActive = true
-        moodHeader.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 15).isActive = true
+        moodHeader.topAnchor.constraint(equalTo: tempLabel.bottomAnchor, constant: 16).isActive = true
+        moodHeader.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16).isActive = true
         
         moodLabel.topAnchor.constraint(equalTo: moodHeader.bottomAnchor, constant: 8).isActive = true
         moodLabel.leadingAnchor.constraint(equalTo: moodHeader.leadingAnchor, constant: 0).isActive = true
         
-        temperatureHeader.topAnchor.constraint(equalTo: moodLabel.bottomAnchor, constant: 12).isActive = true
+        temperatureHeader.topAnchor.constraint(equalTo: moodLabel.bottomAnchor, constant: 16).isActive = true
         temperatureHeader.leadingAnchor.constraint(equalTo: moodLabel.leadingAnchor, constant: 0).isActive = true
         
         
         tempMaxMinLabel.leadingAnchor.constraint(equalTo: temperatureHeader.leadingAnchor, constant: 0).isActive = true
         tempMaxMinLabel.topAnchor.constraint(equalTo: temperatureHeader.bottomAnchor, constant: 8).isActive = true
         
-        cloudsHeader.topAnchor.constraint(equalTo: tempMaxMinLabel.bottomAnchor, constant: 12).isActive = true
+        cloudsHeader.topAnchor.constraint(equalTo: tempMaxMinLabel.bottomAnchor, constant: 16).isActive = true
         cloudsHeader.leadingAnchor.constraint(equalTo: tempMaxMinLabel.leadingAnchor, constant: 0).isActive = true
         
         cloudLabel.topAnchor.constraint(equalTo: cloudsHeader.bottomAnchor, constant: 8).isActive = true
@@ -231,25 +231,25 @@ class HomeViewController: UIViewController {
         descriptionLabel.topAnchor.constraint(equalTo: cloudLabel.bottomAnchor, constant: 4).isActive = true
         descriptionLabel.leadingAnchor.constraint(equalTo: cloudLabel.leadingAnchor, constant: 0).isActive = true
         
-        sunHeader.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 12).isActive = true
+        sunHeader.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16).isActive = true
         sunHeader.leadingAnchor.constraint(equalTo: descriptionLabel.leadingAnchor, constant: 0).isActive = true
         
         sunriseSunsetLabel.topAnchor.constraint(equalTo: sunHeader.bottomAnchor, constant: 8).isActive = true
         sunriseSunsetLabel.leadingAnchor.constraint(equalTo: descriptionLabel.leadingAnchor, constant: 0).isActive = true
         
-        windHeader.topAnchor.constraint(equalTo: sunriseSunsetLabel.bottomAnchor, constant: 12).isActive = true
+        windHeader.topAnchor.constraint(equalTo: sunriseSunsetLabel.bottomAnchor, constant: 16).isActive = true
         windHeader.leadingAnchor.constraint(equalTo: sunriseSunsetLabel.leadingAnchor, constant: 0).isActive = true
         
         windLabel.topAnchor.constraint(equalTo: windHeader.bottomAnchor, constant: 8).isActive = true
         windLabel.leadingAnchor.constraint(equalTo: windHeader.leadingAnchor, constant: 0).isActive = true
         
-        humidityHeader.topAnchor.constraint(equalTo: windLabel.bottomAnchor, constant: 12).isActive = true
+        humidityHeader.topAnchor.constraint(equalTo: windLabel.bottomAnchor, constant: 16).isActive = true
         humidityHeader.leadingAnchor.constraint(equalTo: windLabel.leadingAnchor, constant: 0).isActive = true
         
         humidityLabel.topAnchor.constraint(equalTo: humidityHeader.bottomAnchor, constant: 8).isActive = true
         humidityLabel.leadingAnchor.constraint(equalTo: humidityHeader.leadingAnchor, constant: 0).isActive = true
         
-        moonHeader.topAnchor.constraint(equalTo: humidityLabel.bottomAnchor, constant: 12).isActive = true
+        moonHeader.topAnchor.constraint(equalTo: humidityLabel.bottomAnchor, constant: 16).isActive = true
         moonHeader.leadingAnchor.constraint(equalTo: humidityLabel.leadingAnchor, constant: 0).isActive = true
         
         moonLabel.topAnchor.constraint(equalTo: moonHeader.bottomAnchor, constant: 8).isActive = true
@@ -273,10 +273,10 @@ class HomeViewController: UIViewController {
     }
     
     private func showMoon() {
-        if let moon = moon {
+        if let moon = moons?.first {
             DispatchQueue.main.async {
-                let phaseString = MoonPhaseText(string: moon.Phase).moonPhaseString
-                phaseString?.append(NSAttributedString(string: "\nType: \(moon.Moon.first ?? "")"))
+                let phaseString = MoonPhaseText(string: moon.moonPhaseDesc ?? "").moonPhaseString
+                phaseString?.append(NSAttributedString(string: "\nMoon Rise: \(moon.moonrise)\nMoon Set: \(moon.moonset)"))
                 self.moonLabel.attributedText = phaseString
                 
                 //self.moonLabel.text = "Moon Phase: \(moon.Phase)\nMoon Type: \(moon.Moon.first ?? "")"

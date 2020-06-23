@@ -20,7 +20,7 @@ class ExplanationViewController: UIViewController {
     lazy var titleLabel: UILabel = {
         let l = UILabel()
         l.text = "What's this all about?"
-        l.font = Fonts.Bold.of(34)
+        l.font = Fonts.Bold.of(32)
         l.textColor = Constants.labelColor
         l.minimumScaleFactor = Constants.labelScaleFactor
         l.textAlignment = .left
@@ -37,7 +37,7 @@ class ExplanationViewController: UIViewController {
     lazy var descriptionLabel: UILabel = {
         let l = UILabel()
         l.numberOfLines = 0
-        l.font = Fonts.Light.of(17)
+        l.font = Fonts.Light.of(16)
         l.textColor = Constants.labelColor
         l.minimumScaleFactor = Constants.labelScaleFactor
         l.lineBreakMode = .byWordWrapping
@@ -51,7 +51,7 @@ class ExplanationViewController: UIViewController {
     lazy var gotItButton: UIButton = {
         let b = UIButton()
         b.setTitle("Got it", for: .normal)
-        b.titleLabel?.font = Fonts.Bold.of(17)
+        b.titleLabel?.font = Fonts.Bold.of(16)
         b.setTitleColor(Constants.labelColor, for: .normal)
         b.layer.cornerRadius = Constants.buttonRadius
         b.addTarget(self, action: #selector(dismissVC), for: .touchUpInside)
@@ -101,36 +101,36 @@ class ExplanationViewController: UIViewController {
         gotItButton.translatesAutoresizingMaskIntoConstraints = false
         
         // scroll view
-        scrollView.topAnchor.constraint(equalTo: margins.topAnchor, constant: 10).isActive = true
+        scrollView.topAnchor.constraint(equalTo: margins.topAnchor, constant: 8).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: gotItButton.topAnchor, constant: 0).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: 0).isActive = true
         
         // titleLabel
         //titleLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20).isActive = true
-        titleLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16).isActive = true
         titleLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: 0).isActive = true
-        //titleLabel.heightAnchor.constraint(equalTo: margins.heightAnchor, multiplier: 0.10).isActive = true
+        //titleLabel.heightAnchor.constraint(equalTo: margins.heightAnchor, multiplier: 0.8).isActive = true
         
         
         
         // descriptionLabel
-        descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20).isActive = true
-        descriptionLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20).isActive = true
+        descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16).isActive = true
+        descriptionLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16).isActive = true
         descriptionLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: 0).isActive = true
         //descriptionLabel.heightAnchor.constraint(equalTo: margins.heightAnchor, multiplier: 0.35).isActive = true
         
-        colorExplanationContainerView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20).isActive = true
-        colorExplanationContainerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20).isActive = true
-        colorExplanationContainerView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 30).isActive = true
+        colorExplanationContainerView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 24).isActive = true
+        colorExplanationContainerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16).isActive = true
+        colorExplanationContainerView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 32).isActive = true
         
         
         //colorExplanationContainerView.heightAnchor.constraint(equalTo: margins.heightAnchor, multiplier: 0.55).isActive = true
         
         // gotItButton
         self.scrollView.setWidthConstraint(scrollView.widthAnchor, factor: 0.9)
-        gotItButton.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -10).isActive = true
+        gotItButton.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -8).isActive = true
         gotItButton.heightAnchor.constraint(equalTo: margins.heightAnchor, multiplier: 0.05).isActive = true
         //gotItButton.widthAnchor.constraint(equalTo: margins.widthAnchor, multiplier: 0.55).isActive = true
         gotItButton.centerXAnchor.constraint(equalTo: margins.centerXAnchor, constant: 0).isActive = true

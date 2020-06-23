@@ -18,11 +18,14 @@ struct Constants {
 }
 
 enum MoonPhases: String, CaseIterable {
-    case WaningCrescent = "WaningCrescent"
-    case WaxingCresecent = "WaxingCresent"
-    case WaningGibbous = "WaningGibbous"
-    case WaxingGibbous = "WaxingGibbous"
-    case FullMoon = "FullMoon"
+    case WaningCrescent = "Waningcrescent"
+    case WaxingCresecent = "Waxingcrescent"
+    case WaningGibbous = "Waninggibbous"
+    case WaxingGibbous = "Waxinggibbous"
+    case FullMoon = "Fullmoon"
+    case FirstQuarter = "FirstQuarter"
+    case LastQuarter = "LastQuarter"
+    case NewMoon = "Newmoon"
     func setImage() -> UIImage? {
         return UIImage(named: self.rawValue)
     }

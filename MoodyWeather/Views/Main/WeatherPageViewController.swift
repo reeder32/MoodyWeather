@@ -119,27 +119,25 @@ class WeatherPageViewController: UIPageViewController {
     
     
     func getMoon(_ lat: Double, _ lon: Double, _ weather: Weather?) {
-        connector.getMoonData(lat, lon) { (moons, error) in
-            if ((moons?.first) != nil), let moon = moons?.first {
-                self.createPages(weather, moon)
+        connector.calculateMoon(lat, lon) { [weak self] (moonData, error) in
+            if error == nil {
+                self?.createPages(weather, moonData)
             } else {
                 if weather != nil {
-                    self.createPages(weather, nil)
+                    self?.createPages(weather, nil)
                 } else {
-                    self.createPages(nil, nil)
+                    self?.createPages(nil, nil)
                 }
             }
         }
+        
     }
     
-    func createPages(_ weather: Weather?, _ moon: Moon?) {
-        
+    func createPages(_ weather: Weather?, _ moons: [Moon]?) {
+       
         DispatchQueue.main.async {
-            
-            let homeVC = HomeViewController(weather: weather, moon: moon)
-            //print(self.pages.capacity)
+            let homeVC = HomeViewController(weather: weather, moons: moons)
             self.pages.append(homeVC)
-            //print(self.pages.count, self.ids?.count)
             if self.pages.count == self.ids?.count || weather?.name.lowercased() == "example" {
                 self.arrangePages()
             }

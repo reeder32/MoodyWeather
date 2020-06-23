@@ -114,18 +114,18 @@ class SearchViewController: UIViewController {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         locationButton.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 44).isActive = true
+        searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 48).isActive = true
         searchBar.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         searchBar.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.75).isActive = true
-        searchBar.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        searchBar.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
         locationButton.centerXAnchor.constraint(equalTo: searchBar.centerXAnchor, constant: 0).isActive = true
-        locationButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20).isActive = true
+        locationButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 16).isActive = true
         
         tableView.topAnchor.constraint(equalTo: locationButton.bottomAnchor, constant: 8).isActive = true
         tableView.centerXAnchor.constraint(equalTo: searchBar.centerXAnchor, constant: 0).isActive = true
         tableView.widthAnchor.constraint(equalTo: searchBar.widthAnchor, constant: 0).isActive = true
-        tableView.bottomAnchor.constraint(greaterThanOrEqualTo: view.bottomAnchor, constant: 20).isActive = true
+        tableView.bottomAnchor.constraint(greaterThanOrEqualTo: view.bottomAnchor, constant: 16).isActive = true
     }
     
     override func viewWillAppear(_ animated: Bool) {

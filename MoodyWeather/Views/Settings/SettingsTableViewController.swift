@@ -23,7 +23,7 @@ class SettingsTableViewController: UITableViewController {
     let encoder = JSONEncoder()
     let decoder = JSONDecoder()
     let urlKeys = ["weather data", "moon data"]
-    let urlValues = [ "openweathermap.org", "farmsense.net"]
+    let urlValues = [ "openweathermap.org", "here.com"]
     var didUpdatePrefs: ((Bool?) -> Void)?
     var didRemoveLocation: ((Int?) -> Void)?
     
@@ -115,7 +115,7 @@ class SettingsTableViewController: UITableViewController {
         }
     }
     func goToFarmSense() {
-        if let url = URL(string: "http://farmsense.net") {
+        if let url = URL(string: "https://www.here.com") {
             UIApplication.shared.open(url)
         }
     }

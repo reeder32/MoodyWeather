@@ -34,57 +34,42 @@ struct Weather: Codable {
     var dt: TimeInterval
     var visibility: Int?
     var index: Int?
+}
+
+
+struct Moon {
+
+    let city: String?
+    let moonPhaseDesc: String?
+    let date: String?
+    let moonrise: String
+    let moonset: String
+
+}
+
+struct MoonData {
+    let astronomy : [String: Any]
+    var weeklyData : [[String: Any]]? = nil
+    mutating func getValues() -> [Moon]? {
+        if let weeklyData = astronomy["astronomy"] as? [String: Any] {
+            var weeklyMoonData = [Moon]()
+            guard let astronomy = weeklyData["astronomy"] as? [[String: Any]] else { return [] }
+            astronomy.forEach { object in
+                guard let city = object["city"] as? String, let moonPhase = object["moonPhaseDesc"] as? String, let date = object["utcTime"] as? String, let moonrise = object["moonrise"] as? String, let moonset = object["moonset"] as? String else { return }
+                let moon = Moon(city: city,
+                                moonPhaseDesc: moonPhase,
+                                date: date,
+                                moonrise: moonrise,
+                                moonset: moonset)
+                weeklyMoonData.append(moon)
+            }
+            //print(weeklyMoonData)
+            return weeklyMoonData
+        } else {
+            return []
+        }
+    }
     
-}
-
-struct Coord: Codable {
-    var lat: Double
-    var lon: Double
-}
-
-struct Clouds: Codable {
-    var all: Int
-}
-struct System: Codable {
-    var country: String
-    var id: Int?
-    var sunrise: TimeInterval
-    var sunset: TimeInterval
-    var type: Int?
-    var timezone: Int?
-}
-struct Main: Codable {
-    var feels_like: Double
-    var humidity: Int
-    var pressure: Int
-    var temp: Double
-    var temp_max: Double
-    var temp_min: Double
-}
-struct Wind: Codable {
-    var gust: Double?
-    var deg: Int?
-    var speed: Double
-}
-struct WeatherArray: Codable {
-    var description: String
-    var icon: String
-    var id: Int
-    var main: String
-}
-struct Moon: Codable {
-    let Age: Double
-    let AngularDiameter: Double
-    let Distance: Double
-    let DistanceToSun: Double
-    let Error: Double
-    let ErrorMsg: String
-    let Illumination: Double
-    let Index: Double
-    let Moon: [String]
-    let Phase: String
-    let SunAngularDiameter: Double
-    let TargetDate: String
 }
 
 import Foundation
@@ -99,7 +84,7 @@ class OpenWeatherMapApiConnector: NSObject {
     private static let baseURL = "http://api.openweathermap.org/data/2.5/"
     var didGetWeatherList: ((WeatherList?, Error?) -> Void)?
     var didGetWeather: ((Weather?, Error?) -> Void)?
-    
+    var didGetMoonData: (([Moon]?, Error?) -> Void)?
     var session = URLSession.shared
 
     func getWeatherForIds(_ ids: [String]) {
@@ -114,10 +99,9 @@ class OpenWeatherMapApiConnector: NSObject {
 //                                        print(jsonData)
                     
                     let weatherList = try? self?.decoder.decode(WeatherList.self, from: data)
-                    
                     self?.didGetWeatherList?(weatherList, nil)
                 } else {
-                    self?.didGetWeather?(nil, error)
+                    self?.didGetWeatherList?(nil, error)
                     print(error as Any)
                     
                 }
@@ -170,85 +154,24 @@ class OpenWeatherMapApiConnector: NSObject {
             task.resume()
         }
     }
-        
-    func getMoonData(_ lat: Double?, _ lon: Double?, _ completion: @escaping(_ moon: [Moon]?, _ error: Error?) -> Void) {
+    
+    func calculateMoon(_ lat: Double?, _ lon: Double?, completion: @escaping(_ moonData: [Moon]?, _ error: Error?) -> Void) {
         guard let lat = lat, let lon = lon else {
             return
         }
        
-        if let url = URL(string: "http://api.farmsense.net/v1/moonphases/?d=\(Int(Date().timeIntervalSince1970 - (86400 * 12)))&lat=\(lat)&lon=\(lon)") {
+        if let url = URL(string: "https://weather.ls.hereapi.com/weather/1.0/report.json?apiKey=87j3w6HHYAlXjkv3LVsTIKg1RUQnOncBH6eSkiz-IhU&product=forecast_astronomy&latitude=\(lat)&longitude=\(lon)") {
             let request = URLRequest(url: url)
-            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                guard let data = data, error == nil else {
-                    return
-                }
-            
-                let moon = try? self.decoder.decode([Moon].self, from: data)
-                if moon?.first?.ErrorMsg != "success" {
-                    completion(nil, error)
-                } else {
-                    completion(moon, nil)
-                }
+            let task = URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) in
+                if let  error = error { completion(nil, error) }
+                guard let data = data else { return }
+                guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {completion(nil, nil); return }
+                    var moonData = MoonData(astronomy: jsonData)
+                completion(moonData.getValues(), nil)
+                
             }
             task.resume()
         }
     }
-//
-//    func getClimaCellWeather() {
-//
-//        if  let url = URL(string: "\(OpenWeatherMapApiConnector.climaCellBaseURL)/weather/realtime?lat=45.705220&lon=-122.691980&unit_system=us&fields=\(OpenWeatherMapApiConnector.fields)") {
-//            var request = URLRequest(url: url)
-//            request.addValue("\(OpenWeatherMapApiConnector.climaCellApiKey)", forHTTPHeaderField: "apikey")
-//            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//
-//            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-//                //print(data, response, error)
-//                if let data = data, error == nil {
-//                    let jsonData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
-//                    print(jsonData)
-//
-//                }
-//
-//            }
-//            task.resume()
-//        } else {
-//
-//        }
-//    }
-    // need to pay for this. Maybe sub option
-    //    func getForecast(_ lat: Double?, _ lon: Double?, completion: @escaping(_ weather: Weather?, _ error: Error?) -> Void) {
-    //        guard let lat = lat else { completion(nil, nil); return }
-    //        guard let lon = lon else { completion(nil, nil); return }
-    //        if let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast/hourly?lat=\(lat)&lon=\(lon)&APPID=\(OpenWeatherMapApiConnector.apiKey)") {
-    //            let request = URLRequest(url: url)
-    //            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-    //                if let data = data, error == nil {
-    //                    let jsonData = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
-    //                    print(jsonData)
-    //
-    //                }
-    //            }
-    //            task.resume()
-    //        }
-    //    }
-    //
-    //    func getWeatherWithZipCode(zipCode: String?, completion: @escaping(_ weather: Weather?, _ error: Error?) -> Void) {
-    //
-    //        guard let zipCode = zipCode else { completion(nil, nil); return }
-    //        if  let url = URL(string: "http://api.openweathermap.org/data/2.5/weather?zip=\(zipCode),us&APPID=\(OpenWeatherMapApiConnector.apiKey)") {
-    //            let request = URLRequest(url: url)
-    //
-    //            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-    //                if let data = data, error == nil {
-    //                    let weather = try? self.decoder.decode(Weather.self, from: data)
-    //                    completion(weather, nil)
-    //
-    //                } else {
-    //                    completion(nil, error)
-    //                }
-    //            }
-    //            task.resume()
-    //        }
-    //
-    //    }
+        
 }
