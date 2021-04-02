@@ -37,7 +37,7 @@ class WeatherPageViewController: UIPageViewController {
         return UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
     }()
     
-   
+    
     var pages = [HomeViewController]()
     let defaults = UserDefaults.standard
     let connector = OpenWeatherMapApiConnector.shared
@@ -47,6 +47,7 @@ class WeatherPageViewController: UIPageViewController {
     var vcIndex = 0
     var savedLocations = DefaultsManager().savedLocations
     var didAddPage: ((Weather?) -> Void)?
+    var isFlipped: Bool = false
     init(_ ids: [Int]?) {
         self.ids = ids
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [:])
@@ -61,7 +62,34 @@ class WeatherPageViewController: UIPageViewController {
         }
     }
     
-  
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        
+        if self.pages.count >= 2 {
+            if motion == .motionShake {
+                let vc = ColorGridViewController()
+                vc.modalTransitionStyle = .flipHorizontal
+                vc.modalPresentationStyle = .fullScreen
+                var colorGV: [ColorGridView] = []
+                for pages in self.pages {
+                    let gridView = ColorGridView(color: pages.view.backgroundColor ?? .averageColor, name: pages.weather?.name ?? "", temp: pages.tempLabel.text ?? "")
+                    colorGV.append(gridView)
+                }
+                vc.colorGridViews = colorGV
+                if !isFlipped {
+                    present(vc, animated: true) {
+                        self.isFlipped.toggle()
+                    }
+                } else {
+                    self.dismiss(animated: true) {
+                        self.isFlipped.toggle()
+                    }
+                }
+            }
+        } else {
+            alert(message: "You need to have at least two saved locations")
+        }
+    }
+    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -97,6 +125,20 @@ class WeatherPageViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(forName: .PageIndex, object: nil, queue: .main) { [weak self] (notif) in
+            guard let index = notif.userInfo?["index"] as? Int else { return }
+            guard let weakSelf = self else { return }
+            weakSelf.dismiss(animated: true) {
+                weakSelf.isFlipped.toggle()
+            }
+            let page = weakSelf.pages[index]
+            weakSelf.pageControl.currentPage = index
+            weakSelf.setViewControllers([page], direction: .forward, animated: true, completion: nil)
+           
+            
+        }
+       
+        
         // Do any additional setup after loading the view.
     }
     
@@ -112,7 +154,7 @@ class WeatherPageViewController: UIPageViewController {
                 self.ids?.removeAll()
             }
             self.didAddPage?(weather)
-          
+            
         }
     }
     
@@ -134,7 +176,7 @@ class WeatherPageViewController: UIPageViewController {
     }
     
     func createPages(_ weather: Weather?, _ moons: [Moon]?) {
-       
+        
         DispatchQueue.main.async {
             let homeVC = HomeViewController(weather: weather, moons: moons)
             self.pages.append(homeVC)
@@ -166,7 +208,17 @@ class WeatherPageViewController: UIPageViewController {
         addPageControl()
         addConstraints()
         if let ids = self.ids {
-            if ids.count <= 0 {goToExplainVC()}
+            if ids.count <= 0 {goToExplainVC()} else {
+                self.showShakeFeature()
+            }
+        }
+       
+    }
+    
+    func showShakeFeature() {
+        if !defaults.bool(forKey: UserDefaultsKeys.HasSeenShakeFeature.rawValue) {
+            alert(message: "You can view all moods at once with a gentle shake! Give it a try.")
+            defaults.setValue(true, forKey: UserDefaultsKeys.HasSeenShakeFeature.rawValue)
         }
     }
     
@@ -258,7 +310,7 @@ class WeatherPageViewController: UIPageViewController {
     @objc func goToSettings() {
         let settingsVC = SettingsTableViewController()
         settingsVC.didUpdatePrefs = {  result in
-            NotificationCenter.default.post(name: NSNotification.Name.init("updatePrefs"), object: nil, userInfo: [:])
+            NotificationCenter.default.post(name: .UpdatePrefs, object: nil, userInfo: [:])
         }
         settingsVC.didRemoveLocation = { [weak self] identifer in
             
@@ -325,3 +377,4 @@ extension WeatherPageViewController: UIPageViewControllerDelegate, UIPageViewCon
     
     
 }
+

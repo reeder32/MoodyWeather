@@ -46,12 +46,13 @@ class LoadingViewController: UIViewController {
         setupViews()
         setConstraints()
         
+       
         // Do any additional setup after loading the view.
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.check()
+        initLocationManager()
     }
     
     func setupViews() {
@@ -67,16 +68,15 @@ class LoadingViewController: UIViewController {
     }
     
     
-   private func check() {
-   
+    func initLocationManager() {
         let locationManager = LocationManager.instance
         locationManager.start()
-       
+        
         locationManager.didGetLocation = { [weak self] loc, error in
-            
+           
             if self?.location == nil {
                 self?.location = loc
-               
+                
                 if error != nil { self?.presentPageControl(self?.locationIDs ?? []); locationManager.stop(); return }
                 if let loc = loc {
                     
@@ -86,32 +86,31 @@ class LoadingViewController: UIViewController {
                 }
                 
             }
-             locationManager.stop()
+          
+            locationManager.stop()
         }
-        
     }
-    
     func getWeatherForCurrentLocation(location: CLLocation) {
         //print(location)
-  
+        
         connector.getWeatherForCurrentLocation(lat: location.coordinate.latitude, lon: location.coordinate.longitude)
         connector.didGetWeather = { [weak self] (weather, error) in
             if error != nil {
                 self?.presentPageControl(self?.locationIDs ?? [])
                 return
-
+                
             }
             guard let weather = weather, error == nil else {
-
+                
                 return
-
+                
             }
             // need to init homevc with weather
-
+            
             let currentLocationId = [weather.id]
-
+            
             let combined = currentLocationId + (self?.locationIDs ?? [])
-
+            
             self?.presentPageControl(combined)
         }
     }
@@ -131,3 +130,5 @@ class LoadingViewController: UIViewController {
     
     
 }
+
+

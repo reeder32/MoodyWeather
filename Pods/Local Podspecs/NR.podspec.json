@@ -1,0 +1,25 @@
+{
+  "name": "NR",
+  "version": "0.1.4",
+  "summary": "A short description of NR.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/Reeder",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Reeder": "reeder@reeder.com"
+  },
+  "source": {
+    "git": "https://github.com/Reeder.git",
+    "tag": "0.1.4"
+  },
+  "platforms": {
+    "ios": "9.1"
+  },
+  "source_files": "NR/Classes/**/*",
+  "ios": {
+    "vendored_frameworks": "NR/Reeder.framework"
+  }
+}

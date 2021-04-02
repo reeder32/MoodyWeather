@@ -1,0 +1,6 @@
+framework module NR {
+  umbrella header "NR-umbrella.h"
+
+  export *
+  module * { export * }
+}

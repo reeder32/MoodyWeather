@@ -51,6 +51,19 @@ extension UIColor {
         }
     }
     
+     var descriptionName: String {
+        switch self {
+        case .anxiousColor: return "Anxious"
+        case .nervousColor: return "Nervous"
+        case .averageColor: return "Average"
+        case .tenseColor: return "Tense"
+        case .chargedColor: return "Charged"
+        case .relaxedColor: return "Relaxed"
+        case .happyColor: return "Happy"
+        default: return ""
+        }
+    }
+    
 }
 
 
@@ -183,4 +196,51 @@ extension UIViewController {
         }
     }
     
+}
+
+extension Character {
+    /// A simple emoji is one scalar and presented to the user as an Emoji
+    var isSimpleEmoji: Bool {
+        guard let firstScalar = unicodeScalars.first else { return false }
+        return firstScalar.properties.isEmoji && firstScalar.value > 0x238C
+    }
+
+    /// Checks if the scalars will be merged into an emoji
+    var isCombinedIntoEmoji: Bool { unicodeScalars.count > 1 && unicodeScalars.first?.properties.isEmoji ?? false }
+
+    var isEmoji: Bool { isSimpleEmoji || isCombinedIntoEmoji }
+}
+
+extension Notification.Name {
+    static let PageIndex = Notification.Name.init("pageIndex")
+    static let UpdatePrefs = Notification.Name.init("updatePrefs")
+}
+
+enum ConsentViewType {
+    case GDPR
+    case CCPA
+    case Default
+}
+
+
+protocol URLButton: AnyObject {
+    //func goToPrivacyPolicyURL()
+}
+
+extension URLButton {
+    func goToPrivacyPolicyURL() {
+        if let url = URL(string: "https://moody-weather.flycricket.io/privacy.html") {
+            UIApplication.shared.open(url)
+        }
+    }
+    func goToOMW() {
+        if let url = URL(string: "https://openweathermap.org/") {
+            UIApplication.shared.open(url)
+        }
+    }
+    func goToFarmSense() {
+        if let url = URL(string: "https://www.here.com") {
+            UIApplication.shared.open(url)
+        }
+    }
 }

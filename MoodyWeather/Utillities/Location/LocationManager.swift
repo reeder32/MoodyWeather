@@ -14,7 +14,7 @@ class LocationManager: NSObject {
     var manager: CLLocationManager?
     var didAccept: ((Bool) -> Void)?
     var didGetLocation: ((CLLocation?, Error?) -> Void)?
-  
+    
     override init() {
         super.init()
         manager = CLLocationManager()
@@ -23,7 +23,11 @@ class LocationManager: NSObject {
     }
     
     func start() {
+        if !UserDefaults.standard.bool(forKey: UserDefaultsKeys.HasSeenConsent.rawValue) {
+            ConsentManager.shared.initNR()
+        }
         manager?.startUpdatingLocation()
+        
     }
     
     func stop() {
@@ -35,6 +39,7 @@ extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             didGetLocation?(location, nil)
+          
         }
     }
     

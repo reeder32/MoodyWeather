@@ -12,15 +12,20 @@ enum UserDefaultsKeys: String {
     case RecentWeather
     case RecentMoon
     case SavedLocations
+    case HasSeenDescriptionPopup
+    case HasSeenShakeFeature
+    case HasSeenConsent
 }
 
 import Foundation
 
 class DefaultsManager: NSObject {
+    
     let defaults = UserDefaults.standard
     var savedLocations: [SavedLocation]?
     let encoder = JSONEncoder()
     let decoder = JSONDecoder()
+    
     override init() {
         super.init()
         self.savedLocations = getLocations()
@@ -59,5 +64,5 @@ class DefaultsManager: NSObject {
         }
     
     }
-  
+      
 }

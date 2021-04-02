@@ -10,11 +10,12 @@ enum SettingsSection: Int {
     case Temperature = 0
     case SavedPlaces
     case ThankYous
+  
 }
 
 import UIKit
 
-class SettingsTableViewController: UITableViewController {
+class SettingsTableViewController: UITableViewController, URLButton {
     var savedPlaces : [SavedLocation] = [] {
         didSet {
             tableView.reloadData()
@@ -22,8 +23,8 @@ class SettingsTableViewController: UITableViewController {
     }
     let encoder = JSONEncoder()
     let decoder = JSONDecoder()
-    let urlKeys = ["weather data", "moon data"]
-    let urlValues = [ "openweathermap.org", "here.com"]
+    let urlKeys = ["weather data", "moon data", "privacy policy"]
+    let urlValues = [ "openweathermap.org", "here.com", ""]
     var didUpdatePrefs: ((Bool?) -> Void)?
     var didRemoveLocation: ((Int?) -> Void)?
     
@@ -45,7 +46,7 @@ class SettingsTableViewController: UITableViewController {
   // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
+      
         return 3
     }
     
@@ -103,24 +104,15 @@ class SettingsTableViewController: UITableViewController {
         if indexPath.section == SettingsSection.ThankYous.rawValue {
             if indexPath.row == 0 {
                 goToOMW()
-            } else {
+            } else if indexPath.row == 1 {
                 goToFarmSense()
+            } else {
+                goToPrivacyPolicyURL()
             }
         }
     }
     
-    func goToOMW() {
-        if let url = URL(string: "https://openweathermap.org/") {
-            UIApplication.shared.open(url)
-        }
-    }
-    func goToFarmSense() {
-        if let url = URL(string: "https://www.here.com") {
-            UIApplication.shared.open(url)
-        }
-    }
-    
-    
+   
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.

@@ -162,7 +162,7 @@ class OpenWeatherMapApiConnector: NSObject {
        
         if let url = URL(string: "https://weather.ls.hereapi.com/weather/1.0/report.json?apiKey=87j3w6HHYAlXjkv3LVsTIKg1RUQnOncBH6eSkiz-IhU&product=forecast_astronomy&latitude=\(lat)&longitude=\(lon)") {
             let request = URLRequest(url: url)
-            let task = URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) in
+            let task = URLSession.shared.dataTask(with: request) {  (data, response, error) in
                 if let  error = error { completion(nil, error) }
                 guard let data = data else { return }
                 guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {completion(nil, nil); return }

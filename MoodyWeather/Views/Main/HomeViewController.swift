@@ -11,7 +11,14 @@ import CoreLocation
 
 class HomeViewController: UIViewController {
     // MARK: UI
-    
+    var showDescription: Bool = false
+    var descriptionAttributedText: [NSAttributedString.Key : Any] = [NSAttributedString.Key.font: Fonts.Bold.of(20) ?? UIFont.boldSystemFont(ofSize: 20)]
+    var hasSeenDescriptionPopup : Bool =  UserDefaults.standard.bool(forKey: UserDefaultsKeys.HasSeenDescriptionPopup.rawValue) {
+        didSet {
+            UserDefaults.standard.setValue(hasSeenDescriptionPopup, forKey: UserDefaultsKeys.HasSeenDescriptionPopup.rawValue)
+            showPopup()
+        }
+    }
     lazy var scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.translatesAutoresizingMaskIntoConstraints = false
@@ -120,6 +127,7 @@ class HomeViewController: UIViewController {
     
     lazy var moodLabel: WeatherLabel = {
         let l = WeatherLabel()
+        l.isUserInteractionEnabled = true
         return l
     }()
     
@@ -136,7 +144,7 @@ class HomeViewController: UIViewController {
     }
     
     var colorCreator: ColorCreator?
-   
+    
     var defaults = UserDefaults.standard
     
     init(weather: Weather?, moons: [Moon]?) {
@@ -145,16 +153,18 @@ class HomeViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         self.colorCreator = ColorCreator(with: self.view)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            
             self.showWeather()
             self.showMoon()
+           
         }
-        
+       
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -162,9 +172,31 @@ class HomeViewController: UIViewController {
         view.backgroundColor = .relaxedColor
         setupViews()
         addConstraints()
-        
+      
     }
     
+    func showPopup() {
+       
+        if !hasSeenDescriptionPopup {
+            let popup = ColorPopupLabel(frame: CGRect(x: 24 , y: self.moodLabel.frame.minY, width: 300, height: 40))
+            popup.label.text = "You can press me to see what the emojis mean \n👇"
+            popup.tag = 100
+            popup.label.isUserInteractionEnabled = true
+            popup.isUserInteractionEnabled = true
+            if self.isViewLoaded && (self.view.window != nil) {
+                view.addSubview(popup)
+            }
+            addTap(popup)
+        } else {
+            let p = self.view.subviews.first(where: {$0.tag == 100})
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.2) {
+                    p?.removeFromSuperview()
+                }
+            }
+        }
+       
+    }
     
     func setupViews() {
         self.view.addSubview(scrollView)
@@ -261,16 +293,23 @@ class HomeViewController: UIViewController {
     }
     
     
-   private func revealInfoLabels() {
+    private func revealInfoLabels() {
         
-        for v in scrollView.subviews {
+        for (i ,v) in scrollView.subviews.enumerated() {
             UIView.animate(withDuration: 1.0, animations: {
                 v.alpha = 1
             }) { (done) in
-                
+                if i == self.scrollView.subviews.count - 1 {
+                    self.showPopup()
+                  
+                }
             }
+           
         }
+       
     }
+    
+    
     
     private func showMoon() {
         if let moon = moons?.first {
@@ -295,20 +334,50 @@ class HomeViewController: UIViewController {
                 self.changeLabelsBasedOnPrefs()
                 self.cloudLabel.text = "Cloud cover: \(weather.clouds.all)%"
                 self.descriptionLabel.text = weather.weather.first?.description.localizedCapitalized
-               
+                
                 self.sunriseSunsetLabel.text = "Sunrise: \(self.convertTimestamp(weather.sys.sunrise, weather.sys.timezone, weather.sys.country))\nSunset: \(self.convertTimestamp(weather.sys.sunset, weather.sys.timezone, weather.sys.country))"
                 self.windLabel.text = "Wind is blowing \(weather.wind.speed) m/s \(self.windDirection(weather.wind.deg ?? 0) ?? "")"
                 self.humidityLabel.text = "Humidity: \(weather.main.humidity)%"
-                if let tempColor = self.colorCreator?.moodyWeatherCreator?.tempColor, let cloudColor = self.colorCreator?.moodyWeatherCreator?.cloudColor {
-                    if tempColor.name != cloudColor.name {
-                        self.moodLabel.text = "Weather is feeling \(tempColor.name ?? "") and \(cloudColor.name ?? "")" /*self.moodLabel.createMoodLabel(text: "Weather is feeling \(tempColor.name ?? "") and \(cloudColor.name ?? "")", location1: 19, color1: tempColor, color2: cloudColor)*/
-                    } else {
-                        self.moodLabel.text = "Weather is feeling \(tempColor.name ?? "") and \(cloudColor.name ?? "")" /*"self.moodLabel.createMoodLabel(text: "Weather is feeling \(tempColor.name ?? "")", location1: 19, color1: tempColor, color2: nil)*/
-                    }
-                }
                 self.revealInfoLabels()
+                self.addMoodLabelText()
+                self.tapMoodLabel()
+              
             }
         }
+    }
+    
+    func tapMoodLabel() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(toggleLabel))
+        tap.delegate = self
+        moodLabel.addGestureRecognizer(tap)
+    }
+    
+    @objc func toggleLabel(_ gesture: UITapGestureRecognizer) {
+        showDescription.toggle()
+        addMoodLabelText()
+    }
+    
+    func addMoodLabelText() {
+        if let tempColor = self.colorCreator?.moodyWeatherCreator?.tempColor, let cloudColor = self.colorCreator?.moodyWeatherCreator?.cloudColor {
+            if showDescription {
+                let attrText = NSMutableAttributedString()
+                let tempMutText = NSMutableAttributedString(string: tempColor.descriptionName, attributes: descriptionAttributedText)
+                let cloudMutText = NSMutableAttributedString(string: cloudColor.descriptionName, attributes: descriptionAttributedText)
+                self.moodLabel.attributedText = NSAttributedString(string: "Weather is feeling \(tempMutText) and \(cloudMutText)")
+                attrText.append(NSAttributedString(string: "Weather is feeling "))
+                attrText.append(tempMutText)
+                if tempMutText.string != cloudMutText.string {
+                attrText.append(NSAttributedString(string: " and "))
+                attrText.append(cloudMutText)
+                }
+                self.moodLabel.attributedText = attrText
+                self.hasSeenDescriptionPopup = true
+            } else {
+                self.moodLabel.text = "Weather is feeling \(tempColor.name ?? "") and \(cloudColor.name ?? "")"
+            }
+            
+        }
+        
     }
     
     @objc func changeLabelsBasedOnPrefs() {
@@ -332,7 +401,23 @@ class HomeViewController: UIViewController {
 
 
 
-
+extension HomeViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    func addTap(_ tapView: UIView) {
+        let tapped = UITapGestureRecognizer(target: self, action: #selector(dismissMe))
+        tapped.numberOfTapsRequired = 1
+        tapped.delegate = self
+        tapView.addGestureRecognizer(tapped)
+        
+    }
+    
+    @objc func dismissMe() {
+        hasSeenDescriptionPopup = true
+        self.showPopup()
+    }
+}
 
 
 

@@ -31,7 +31,7 @@ class SearchViewController: UIViewController {
     
     lazy var locationButton: UIButton = {
         let b = UIButton()
-        b.setTitle("Or use current location", for: .normal)
+        b.setTitle("Use my location", for: .normal)
         b.layer.borderColor = UIColor(white: 1, alpha: 1).cgColor
         b.layer.borderWidth = 1.5
         b.layer.cornerRadius = Constants.buttonRadius
@@ -79,14 +79,18 @@ class SearchViewController: UIViewController {
             self.tableView.reloadData()
         }
         
-        if self.locationManager.manager?.location != nil {
-            self.locationButton.alpha = 0
-        }
+       
     }
+    
     
     override func viewDidAppear(_ animated: Bool) {
         //loadCities()
         self.searchBar.becomeFirstResponder()
+        if self.locationManager.manager?.location != nil {
+            self.locationButton.alpha = 1
+        } else {
+            self.locationButton.alpha = 0
+        }
     
     }
     override func viewDidDisappear(_ animated: Bool) {
@@ -121,7 +125,7 @@ class SearchViewController: UIViewController {
         
         locationButton.centerXAnchor.constraint(equalTo: searchBar.centerXAnchor, constant: 0).isActive = true
         locationButton.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 16).isActive = true
-        
+        locationButton.widthAnchor.constraint(equalTo: searchBar.widthAnchor, constant: 1).isActive = true
         tableView.topAnchor.constraint(equalTo: locationButton.bottomAnchor, constant: 8).isActive = true
         tableView.centerXAnchor.constraint(equalTo: searchBar.centerXAnchor, constant: 0).isActive = true
         tableView.widthAnchor.constraint(equalTo: searchBar.widthAnchor, constant: 0).isActive = true

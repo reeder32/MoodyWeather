@@ -11,7 +11,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    
+    let defaults = UserDefaults.standard
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
      
@@ -37,9 +37,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func sceneWillEnterForeground(_ scene: UIScene) {
         showLoadingScreen(scene)
+        ConsentManager.shared.delegate = self
+        if defaults.bool(forKey: UserDefaultsKeys.HasSeenConsent.rawValue) {
+            ConsentManager.shared.initNR()
+        }
     }
     
     func showLoadingScreen(_ scene: UIScene?) {
+       
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             window.rootViewController = LoadingViewController()
@@ -56,4 +61,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     
 }
+
+extension SceneDelegate: ConsentManagerDelegate {
+    func showConsentView(_ value: Bool) {
+        
+        if value {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                
+                self.showConsentView()
+            }
+           
+        }
+    }
+    func showConsentView() {
+       
+            if let vc = UIStoryboard(name: "ConsentStoryboard", bundle: nil).instantiateViewController(identifier: "Consent") as? ConsentViewController {
+                vc.type = .Default
+                let keyWindow = UIApplication.shared.windows.filter({ $0.isKeyWindow} ).first
+                if let topController = keyWindow?.rootViewController {
+                    if topController.presentedViewController is WeatherPageViewController {
+                    topController.presentedViewController?.present(vc, animated: true, completion: nil)
+                    } else {
+                        topController.presentedViewController?.presentedViewController?.present(vc, animated: true, completion: nil)
+                    }
+                } else {
+                    
+                }
+            }
+        }
+
+    
+}
+
 
