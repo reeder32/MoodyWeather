@@ -10,12 +10,6 @@ import UIKit
 import NR
 
 class ConsentViewController: UIViewController, URLButton {
-    func didChangeConsent(value: ReederScale, jurisdiction: ReederPlatform) {
-        dismiss(animated: true) {
-            ConsentManager.shared.post(value, jurisdiction)
-        }
-      
-    }
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var declineButton: ConsentButton!
@@ -26,6 +20,13 @@ class ConsentViewController: UIViewController, URLButton {
     @IBOutlet weak var optOutLocationButton: ConsentButton!
     
     var type: ConsentViewType?
+    
+    func didChangeConsent(value: Int32, jurisdiction: Int32) {
+        self.dismiss(animated: true) {
+            ConsentManager.shared.post(value, jurisdiction)
+        }
+    }
+    
     override func viewDidLoad() {
         titleLabel.font = Fonts.Bold.of(25)
         appNameLabel.font = Fonts.Bold.of(35)
@@ -42,7 +43,6 @@ class ConsentViewController: UIViewController, URLButton {
     }
     
     func setupViews() {
-        
         setUpLabels()
         setUpBodyText()
         setUpButtons()
@@ -107,14 +107,14 @@ class ConsentViewController: UIViewController, URLButton {
     }
     
     @objc func agreeButtonPressed() {
-       self.didChangeConsent(value: .Begin, jurisdiction: .defaultPlatform)
+       self.didChangeConsent(value: 2, jurisdiction: 1)
      
        
     }
     
     @objc func declineButtonPressed() {
         //TODO: opt-out and no location permission
-        self.didChangeConsent(value: .LastTime, jurisdiction: .defaultPlatform)
+        self.didChangeConsent(value: 1, jurisdiction: 1)
     }
     
  
@@ -146,7 +146,6 @@ extension UIViewController {
                 vc.type = .Default
                 let keyWindow = UIApplication.shared.windows.filter({ $0.isKeyWindow} ).first
                 if let topController = keyWindow?.rootViewController {
-                    print(topController.presentedViewController?.presentedViewController)
                     topController.presentedViewController?.presentedViewController?.present(vc, animated: true, completion: nil)
                 } else {
                     

@@ -19,60 +19,69 @@ import NR
 class ConsentManager: NSObject {
     static let shared = ConsentManager()
     weak var delegate: ConsentManagerDelegate?
-
     
     override init() {
-        #if DEBUG
-        NR.sharedInstance()?.isDebugMode = true
-        NR.sharedInstance()?.debugSetSendBatch(whenLocationReceived: true)
-        #endif
-       
-    }
-    
-    func initNR() {
-      
-            NR.sharedInstance()?.initWithApiKey(Constants.apiKey, baseUrl: Constants.baseURL, complete: { [weak self] (error, jurisdiction) in
-                if error == nil {
-                    print("NR inited successfully")
-                    self?.delegate?.showConsentView(false)
-                   
-                } else {
-                    
-                    switch error?.localizedDescription {
-                    case "ZoomNothingYet":
-                        debugPrint(jurisdiction)
-                        if jurisdiction == .defaultPlatform {
-                            self?.delegate?.showConsentView(true)
-                        }
-                    case "IdfaPermissionRejected":
-                        print("No idfa permission")
-                        self?.delegate?.showConsentView(false)
-                    case "ZoomRejected":
-                        //self?.post(.Begin, jurisdiction)
-                        self?.delegate?.showConsentView(false)
-                    default:
-                        print("unknown error: \(error?.localizedDescription ?? "")")
-                        self?.delegate?.showConsentView(false)
-                    }
-                   
-                    print(error?.localizedDescription ?? "")
-                }
-            })
         
     }
     
-    
-    func post(_ consent: ReederScale, _ jurisdiction: ReederPlatform) {
-        NR.sharedInstance()?.postConsentValue(consent, withJurisdiction: jurisdiction, complete: { [weak self] (success) in
-            if success {
-                // post to delegate
-                self?.initNR()
+    func initNR () {
+        NR.sharedInstance()?.isDebugMode = true
+        NR.sharedInstance()?.debugSetSendBatch(whenLocationReceived: true)
+        NR.sharedInstance()?.initWithApiKey(Constants.apiKey, baseUrl: Constants.baseURL, complete: { (error, jurisdiction) in
+            if error == nil {
+                print("NR inited successfully")
+                
             } else {
+                print("error:",error?.localizedDescription ?? "")
+                
+                switch error?.localizedDescription {
+                case "CartEmpty":
+                    // CartEmpty = User has not responded to consent yet for that jurisdiction.
+                    print("jurisdiction:",jurisdiction)
+                    
+                    switch jurisdiction {
+                    case 1:
+                        // Default
+                        self.delegate?.showConsentView(true)
+                    case 2:
+                        // GDPR
+                        self.delegate?.showConsentView(false)
+                    case 3:
+                        // CCPA
+                        self.delegate?.showConsentView(true)
+                    default:
+                        // 0 = None.
+                        ConsentManager.shared.delegate?.showConsentView(true)
+                    }
+                    
+                case "IdfaPermissionRejected":
+                    print("idfa rejected")
+                // User said no to IDFA permission. Potentially nag them to accept IDFA for app to work.
+                
+                case "LocationPermissionRejected":
+                    print("location permission rejected")
+                // User said no to Location permission. Potentially nag them to accept permission for app to work.
+                
+                case "ConsentRejected":
+                    print("consent rejected")
+                // User said no to consent.
+                
+                default:
+                    print("unknown error: \(error?.localizedDescription ?? "")")
+                    
+                }
                 
             }
         })
     }
     
-    
-    
+    func post(_ consent: Int32, _ jurisdiction: Int32) {
+        NR.sharedInstance()?.postConsentValue(consent, withJurisdiction: jurisdiction, complete: { [weak self] (success) in
+            if success {
+                self?.initNR() // second time through will successfully init NR fully
+            } else {
+                
+            }
+        })
+    }
 }

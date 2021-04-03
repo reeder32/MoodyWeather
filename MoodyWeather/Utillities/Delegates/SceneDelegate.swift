@@ -39,7 +39,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         showLoadingScreen(scene)
         ConsentManager.shared.delegate = self
         if defaults.bool(forKey: UserDefaultsKeys.HasSeenConsent.rawValue) {
-            ConsentManager.shared.initNR()
+           
         }
     }
     
@@ -58,23 +58,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-    
-    
 }
 
 extension SceneDelegate: ConsentManagerDelegate {
     func showConsentView(_ value: Bool) {
-        
         if value {
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                
                 self.showConsentView()
             }
-           
         }
     }
+    
     func showConsentView() {
-       
             if let vc = UIStoryboard(name: "ConsentStoryboard", bundle: nil).instantiateViewController(identifier: "Consent") as? ConsentViewController {
                 vc.type = .Default
                 let keyWindow = UIApplication.shared.windows.filter({ $0.isKeyWindow} ).first

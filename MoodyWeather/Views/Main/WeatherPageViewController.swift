@@ -209,7 +209,8 @@ class WeatherPageViewController: UIPageViewController {
         addConstraints()
         if let ids = self.ids {
             if ids.count <= 0 {goToExplainVC()} else {
-                self.showShakeFeature()
+                // Commented out for now because it prevents consent from popping up
+                //.self.showShakeFeature()
             }
         }
        

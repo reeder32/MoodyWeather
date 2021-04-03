@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreLocation
+import NR
 
 class LocationManager: NSObject {
     static let instance = LocationManager()
@@ -24,7 +25,7 @@ class LocationManager: NSObject {
     
     func start() {
         if !UserDefaults.standard.bool(forKey: UserDefaultsKeys.HasSeenConsent.rawValue) {
-            ConsentManager.shared.initNR()
+           
         }
         manager?.startUpdatingLocation()
         
@@ -39,17 +40,20 @@ extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             didGetLocation?(location, nil)
-          
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         didGetLocation?(nil, error)
     }
+    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .authorizedWhenInUse:
+            ConsentManager.shared.initNR()
+            
             didAccept?(true)
+            
         default:
             didAccept?(false)
         }
