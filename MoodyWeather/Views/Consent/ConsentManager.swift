@@ -39,7 +39,6 @@ class ConsentManager: NSObject {
                 switch error?.localizedDescription {
                 case "CartEmpty":
                     // CartEmpty = User has not responded to consent yet for that jurisdiction.
-                    print("j:",region)
                     
                     switch region {
                     case 1:
@@ -50,7 +49,7 @@ class ConsentManager: NSObject {
                         self.delegate?.showConsentView(false)
                     case 3:
                         // CCPA
-                        self.delegate?.showConsentView(true)
+                        self.delegate?.showConsentView(false)
                     default:
                         // 0 = None.
                         ConsentManager.shared.delegate?.showConsentView(true)
