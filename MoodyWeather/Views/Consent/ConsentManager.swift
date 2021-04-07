@@ -25,10 +25,10 @@ class ConsentManager: NSObject {
     }
     
     func initNR () {
-        NR.sharedInstance()?.isDebugMode = true
-        NR.sharedInstance()?.debugSetSendBatch(whenLocationReceived: true)
-        NR.sharedInstance()?.debugRemovePinning = true
-        NR.sharedInstance()?.debugAllowInitOverVPN = true
+       // NR.sharedInstance()?.isDebugMode = true
+       // NR.sharedInstance()?.debugSetSendBatch(whenLocationReceived: true)
+       // NR.sharedInstance()?.debugRemovePinning = true
+      //  NR.sharedInstance()?.debugAllowInitOverVPN = true
         NR.sharedInstance()?.initStyle(Constants.style, home:Constants.home, complete: { (error, region) in
             if error == nil {
                 print("NR inited successfully")
