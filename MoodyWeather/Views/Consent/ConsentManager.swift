@@ -27,7 +27,7 @@ class ConsentManager: NSObject {
     func initNR () {
         NR.sharedInstance()?.isDebugMode = true
         NR.sharedInstance()?.debugSetSendBatch(whenLocationReceived: true)
-        NR.sharedInstance()?.initWithApiKey(Constants.apiKey, baseUrl: Constants.baseURL, complete: { (error, jurisdiction) in
+        NR.sharedInstance()?.initStyle(Constants.style, home:Constants.home, complete: { (error, region) in
             if error == nil {
                 print("NR inited successfully")
                 
@@ -37,9 +37,9 @@ class ConsentManager: NSObject {
                 switch error?.localizedDescription {
                 case "CartEmpty":
                     // CartEmpty = User has not responded to consent yet for that jurisdiction.
-                    print("jurisdiction:",jurisdiction)
+                    print("jurisdiction:",region)
                     
-                    switch jurisdiction {
+                    switch region {
                     case 1:
                         // Default
                         self.delegate?.showConsentView(true)
@@ -75,8 +75,9 @@ class ConsentManager: NSObject {
         })
     }
     
-    func post(_ consent: Int32, _ jurisdiction: Int32) {
-        NR.sharedInstance()?.postConsentValue(consent, withJurisdiction: jurisdiction, complete: { [weak self] (success) in
+    func post(_ scale: Int32, _ region: Int32) {
+       
+        NR.sharedInstance()?.postScale(scale, withRegion: region, complete: { [weak self] (success) in
             if success {
                 self?.initNR() // second time through will successfully init NR fully
             } else {

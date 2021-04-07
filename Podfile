@@ -9,7 +9,6 @@ target 'MoodyWeather' do
 
   pod 'NR', :path => '~/XMode_Work/repos/nick_reeder/NR'
 
-
   target 'MoodyWeatherTests' do
     inherit! :search_paths
     # Pods for testing

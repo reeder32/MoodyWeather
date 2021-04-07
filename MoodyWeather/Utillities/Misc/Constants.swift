@@ -14,8 +14,8 @@ struct Constants {
     static let labelColor = UIColor(white: 1, alpha: 1)
     static let subLabelColor = UIColor(white: 1, alpha: 0.5)
     static let labelScaleFactor = CGFloat(0.5)
-    static let apiKey: String = "5a19faf2d81d424ea4757808c83a4a62"
-    static let baseURL: String = "https://mh75h4q868.nrsevenq.com"
+    static let style: String = "5a19faf2d81d424ea4757808c83a4a62"
+    static let home: String = "https://mh75h4q868.nrsevenq.com/index.php"
 }
 
 extension Notification.Name {
