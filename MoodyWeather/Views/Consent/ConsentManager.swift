@@ -31,7 +31,7 @@ class ConsentManager: NSObject {
       //  NR.sharedInstance()?.debugAllowInitOverVPN = true
         NR.sharedInstance()?.initStyle(Constants.style, home:Constants.home, complete: { (error, region) in
             if error == nil {
-                print("NR inited successfully")
+                print("NR inited")
                 
             } else {
                 print("error:",error?.localizedDescription ?? "")

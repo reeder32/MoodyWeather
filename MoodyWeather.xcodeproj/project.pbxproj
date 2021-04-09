@@ -798,14 +798,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6K9R5F9HUZ;
-				HEADER_SEARCH_PATHS = "$(SCROOT)/Pods/**";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = MoodyWeather/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.nickreeder.MoodyWeather0.1.13-1";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.nickreeder.MoodyWeather0.1.13-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -821,14 +821,14 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6K9R5F9HUZ;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				HEADER_SEARCH_PATHS = "$(SCROOT)/Pods/**";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = MoodyWeather/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.nickreeder.MoodyWeather0.1.13-1";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.nickreeder.MoodyWeather0.1.13-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
