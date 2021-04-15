@@ -1,7 +1,7 @@
 # MoodyWeather
 ### an ios app that creates mood colors from weather data
 
-*[View in store](https://apps.apple.com/us/app/moody-weather/id1506337317)
+* [View in store](https://apps.apple.com/us/app/moody-weather/id1506337317)
 
 #### By Nick Reeder
 
