@@ -1,5 +1,5 @@
 # MoodyWeather
-###an ios app that creates mood colors from weather data
+### an ios app that creates mood colors from weather data
 
 *[View in store](https://apps.apple.com/us/app/moody-weather/id1506337317)
 
